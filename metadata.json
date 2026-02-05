@@ -1,6 +1,6 @@
 {
-  "name": "DevBady - Coding Hub",
-  "description": "A comprehensive coding platform for developers, clients, and admins with product management and theme customization.",
+  "name": "ClodeCode - Coding Hub",
+  "description": "Professional coding base platform for developers and clients at clodecode.in.",
   "requestFramePermissions": [
     "camera",
     "microphone"
