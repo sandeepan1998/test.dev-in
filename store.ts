@@ -33,31 +33,74 @@ const DEFAULT_THEME: ThemeConfig = {
   siteName: 'clodecode.in'
 };
 
+/**
+ * Safely retrieves an item from localStorage without throwing errors.
+ */
+const safeGetItem = (key: string): string | null => {
+  try {
+    return typeof window !== 'undefined' ? localStorage.getItem(key) : null;
+  } catch (e) {
+    console.warn(`LocalStorage access blocked for key "${key}":`, e);
+    return null;
+  }
+};
+
+/**
+ * Safely sets an item in localStorage without throwing errors.
+ */
+const safeSetItem = (key: string, value: string) => {
+  try {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value);
+    }
+  } catch (e) {
+    console.warn(`LocalStorage save blocked for key "${key}":`, e);
+  }
+};
+
 export const getStoredUsers = (): User[] => {
-  const data = localStorage.getItem(KEYS.USERS);
-  return data ? JSON.parse(data) : [];
+  const data = safeGetItem(KEYS.USERS);
+  if (!data) return [];
+  try {
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 };
 
 export const getStoredProducts = (): Product[] => {
-  const data = localStorage.getItem(KEYS.PRODUCTS);
-  return data ? JSON.parse(data) : DEFAULT_PRODUCTS;
+  const data = safeGetItem(KEYS.PRODUCTS);
+  if (!data) return DEFAULT_PRODUCTS;
+  try {
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_PRODUCTS;
+  } catch {
+    return DEFAULT_PRODUCTS;
+  }
 };
 
 export const getStoredTheme = (): ThemeConfig => {
-  const data = localStorage.getItem(KEYS.THEME);
-  return data ? JSON.parse(data) : DEFAULT_THEME;
+  const data = safeGetItem(KEYS.THEME);
+  if (!data) return DEFAULT_THEME;
+  try {
+    const parsed = JSON.parse(data);
+    return parsed ? { ...DEFAULT_THEME, ...parsed } : DEFAULT_THEME;
+  } catch {
+    return DEFAULT_THEME;
+  }
 };
 
 export const saveUser = (user: User) => {
   const users = getStoredUsers();
   users.push(user);
-  localStorage.setItem(KEYS.USERS, JSON.stringify(users));
+  safeSetItem(KEYS.USERS, JSON.stringify(users));
 };
 
 export const saveProducts = (products: Product[]) => {
-  localStorage.setItem(KEYS.PRODUCTS, JSON.stringify(products));
+  safeSetItem(KEYS.PRODUCTS, JSON.stringify(products));
 };
 
 export const saveTheme = (theme: ThemeConfig) => {
-  localStorage.setItem(KEYS.THEME, JSON.stringify(theme));
+  safeSetItem(KEYS.THEME, JSON.stringify(theme));
 };
