@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -15,9 +14,9 @@ import { AuthState, UserRole, ThemeConfig } from './types';
 import { getStoredTheme } from './store';
 
 const App: React.FC = () => {
-  const [auth, setAuth] = useState<AuthState>({
-    user: null,
-    isAuthenticated: false,
+  const [auth, setAuth] = useState<AuthState>(() => {
+    // Basic session persistence for demo (not storage yet)
+    return { user: null, isAuthenticated: false };
   });
 
   const [theme, setTheme] = useState<ThemeConfig>(getStoredTheme());
@@ -26,14 +25,19 @@ const App: React.FC = () => {
     setAuth({ user: null, isAuthenticated: false });
   };
 
-  // Sync theme changes to CSS variables if needed, or just pass as props
   useEffect(() => {
     document.title = theme.siteName;
+    const loader = document.getElementById('loader');
+    if (loader) loader.style.display = 'none';
   }, [theme]);
+
+  const appClasses = theme.isDarkMode 
+    ? 'bg-slate-950 text-white selection:bg-blue-500/30' 
+    : 'bg-white text-slate-900 selection:bg-blue-100';
 
   return (
     <Router>
-      <div className={`min-h-screen flex flex-col ${theme.isDarkMode ? 'bg-slate-950 text-white' : 'bg-white text-slate-900'}`}>
+      <div className={`min-h-screen flex flex-col transition-colors duration-300 ${appClasses}`}>
         <Navbar 
           user={auth.user} 
           onLogout={handleLogout} 
@@ -76,6 +80,7 @@ const App: React.FC = () => {
                 )
               } 
             />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
 

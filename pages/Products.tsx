@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Product, User, UserRole } from '../types';
 import { getStoredProducts, saveProducts } from '../store';
@@ -22,7 +21,8 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
     : products.filter(p => p.category === filter);
 
   const handleDelete = (id: string) => {
-    if (!window.confirm("Are you sure you want to remove this product from the coding base?")) return;
+    if (user?.role !== UserRole.ADMIN) return;
+    if (!window.confirm("Are you sure you want to remove this product from the coding base? This action is permanent.")) return;
     const updated = products.filter(p => p.id !== id);
     setProducts(updated);
     saveProducts(updated);
@@ -59,10 +59,10 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
             {user?.role === UserRole.ADMIN && (
               <button 
                 onClick={() => handleDelete(product.id)}
-                className="absolute top-4 left-4 z-20 bg-red-500 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-600"
-                title="Delete Product"
+                className="absolute top-4 left-4 z-20 bg-red-500 text-white p-2.5 rounded-xl opacity-0 group-hover:opacity-100 transition-all shadow-xl hover:bg-red-600 active:scale-90"
+                title="Admin: Delete Product"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               </button>
             )}
             
@@ -81,14 +81,15 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
                 {product.category}
               </div>
               <h3 className="text-2xl font-black mb-3 text-slate-900 leading-tight">{product.name}</h3>
-              <p className="text-slate-500 text-sm mb-8 leading-relaxed line-clamp-2">
+              <p className="text-slate-500 text-sm mb-8 leading-relaxed line-clamp-2 min-h-[3rem]">
                 {product.description}
               </p>
               <button 
                 className="w-full py-4 rounded-2xl text-white font-black shadow-xl shadow-blue-500/20 transition-all hover:brightness-110 active:scale-95 flex items-center justify-center gap-2"
                 style={{ backgroundColor: primaryColor }}
+                onClick={() => alert(`Redirecting to checkout for ${product.name}...`)}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                 License Resource
               </button>
             </div>
