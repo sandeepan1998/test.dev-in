@@ -17,12 +17,12 @@ const Login: React.FC<LoginProps> = ({ setAuth }) => {
     e.preventDefault();
     setError('');
 
-    // Specific Admin Credentials check as requested
-    if (email === 'info.devbady@gmail.com' && password === 'Tithi12@#') {
+    // Specific Admin Credentials check
+    if (email === 'info.clodecode@gmail.com' && password === 'Tithi12@#') {
       const adminUser = {
         id: 'admin-1',
         email: email,
-        name: 'DevBady Master Admin',
+        name: 'ClodeCode Master Admin',
         role: UserRole.ADMIN,
         createdAt: new Date().toISOString()
       };
@@ -55,7 +55,7 @@ const Login: React.FC<LoginProps> = ({ setAuth }) => {
              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3c1.708 0 3.29.426 4.672 1.178m0 0a9.96 9.96 0 013.253 7.932m-8.925-4.446c.43.315.823.684 1.173 1.103m-2.115-2.53l.102.083a2.96 2.96 0 01.357.342m1.653 7.615c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09a10.003 10.003 0 012.353-3.61m8.925 4.446a10.007 10.007 0 01-2.753 3.571"/></svg>
           </div>
           <h2 className="text-4xl font-black text-slate-900 tracking-tight">Login Portal</h2>
-          <p className="text-slate-500 mt-2 font-medium">Access your <b>devbady.in</b> ecosystem</p>
+          <p className="text-slate-500 mt-2 font-medium">Access your <b>clodecode.in</b> ecosystem</p>
         </div>
 
         {error && (
@@ -72,7 +72,7 @@ const Login: React.FC<LoginProps> = ({ setAuth }) => {
               type="email" 
               required
               className="w-full px-6 py-4 rounded-2xl border-2 border-slate-50 focus:border-blue-500 outline-none transition-all font-semibold"
-              placeholder="user@devbady.in"
+              placeholder="user@clodecode.in"
               value={email}
               onChange={e => setEmail(e.target.value)}
             />

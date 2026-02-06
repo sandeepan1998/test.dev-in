@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const Privacy: React.FC = () => {
@@ -9,7 +8,7 @@ const Privacy: React.FC = () => {
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Data Collection</h2>
           <p>
-            At DevBady, we collect minimal personal data required to provide our services. This includes your name, email address, and any project-specific information you choose to share.
+            At ClodeCode, we collect minimal personal data required to provide our services. This includes your name, email address, and any project-specific information you choose to share.
           </p>
         </section>
         
@@ -35,7 +34,7 @@ const Privacy: React.FC = () => {
         </section>
 
         <div className="p-8 bg-gray-50 rounded-2xl border border-gray-100 italic">
-          Last updated: May 20, 2024. For any questions regarding your privacy, please contact privacy@devbady.in.
+          Last updated: May 20, 2024. For any questions regarding your privacy, please contact privacy@clodecode.in.
         </div>
       </div>
     </div>

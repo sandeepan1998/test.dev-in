@@ -1,11 +1,10 @@
-
-import { User, Product, ThemeConfig, UserRole, CartItem } from './types';
+import { User, Product, ThemeConfig, UserRole, CartItem, Currency } from './types';
 
 const KEYS = {
-  PRODUCTS: 'devbady_products_v2',
-  THEME: 'devbady_theme_v2',
-  USERS: 'devbady_users_v2',
-  CART: 'devbady_cart_v2'
+  PRODUCTS: 'clodecode_products_v2',
+  THEME: 'clodecode_theme_v2',
+  USERS: 'clodecode_users_v2',
+  CART: 'clodecode_cart_v2'
 };
 
 const DEFAULT_PRODUCTS: Product[] = [
@@ -39,7 +38,8 @@ const DEFAULT_THEME: ThemeConfig = {
   primaryColor: '#2563eb',
   secondaryColor: '#0f172a',
   isDarkMode: false,
-  siteName: 'devbady.in'
+  siteName: 'clodecode.in',
+  currency: Currency.USD
 };
 
 const safeGetItem = (key: string): string | null => {

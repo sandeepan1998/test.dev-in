@@ -6,6 +6,11 @@ export enum UserRole {
   CLIENT = 'CLIENT'
 }
 
+export enum Currency {
+  USD = 'USD',
+  INR = 'INR'
+}
+
 // Interface for user objects
 export interface User {
   id: string;
@@ -20,7 +25,7 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price: number; // Stored in USD base
   category: string;
   image: string;
 }
@@ -42,4 +47,5 @@ export interface ThemeConfig {
   secondaryColor: string;
   isDarkMode: boolean;
   siteName: string;
+  currency: Currency;
 }

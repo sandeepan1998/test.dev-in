@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CartItem } from '../types';
+import { CartItem, Currency } from '../types';
 
 interface CartProps {
   items: CartItem[];
@@ -9,10 +9,20 @@ interface CartProps {
   onUpdate: (id: string, quantity: number) => void;
   onClear: () => void;
   primaryColor: string;
+  currency: Currency;
 }
 
-const Cart: React.FC<CartProps> = ({ items, onRemove, onUpdate, onClear, primaryColor }) => {
-  const total = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+const EXCHANGE_RATE = 83.5;
+
+const Cart: React.FC<CartProps> = ({ items, onRemove, onUpdate, onClear, primaryColor, currency }) => {
+  const totalUSD = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+  const formatPrice = (usdAmount: number) => {
+    if (currency === Currency.INR) {
+      return `₹${(usdAmount * EXCHANGE_RATE).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+    return `$${usdAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
 
   const handleCheckout = () => {
     if (items.length === 0) return;
@@ -57,7 +67,7 @@ const Cart: React.FC<CartProps> = ({ items, onRemove, onUpdate, onClear, primary
                 <div className="flex-grow">
                   <div className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: primaryColor }}>{item.category}</div>
                   <h4 className="text-xl font-black text-slate-900">{item.name}</h4>
-                  <div className="text-lg font-black text-slate-900 mt-1">${item.price}</div>
+                  <div className="text-lg font-black text-slate-900 mt-1">{formatPrice(item.price)}</div>
                 </div>
                 
                 <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-2xl">
@@ -92,17 +102,17 @@ const Cart: React.FC<CartProps> = ({ items, onRemove, onUpdate, onClear, primary
               <div className="space-y-6 mb-10">
                 <div className="flex justify-between font-bold text-slate-400">
                   <span>Subtotal</span>
-                  <span className="text-white">${total.toFixed(2)}</span>
+                  <span className="text-white">{formatPrice(totalUSD)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-slate-400">
                   <span>Platform Fee</span>
-                  <span className="text-white">$0.00</span>
+                  <span className="text-white">{formatPrice(0)}</span>
                 </div>
                 <div className="h-px bg-white/10 my-6"></div>
                 <div className="flex justify-between items-end">
                   <div>
                     <span className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Grand Total</span>
-                    <span className="text-4xl font-black">${total.toFixed(2)}</span>
+                    <span className="text-4xl font-black">{formatPrice(totalUSD)}</span>
                   </div>
                 </div>
               </div>

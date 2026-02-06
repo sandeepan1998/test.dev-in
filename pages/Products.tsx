@@ -1,15 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
-import { Product, User, UserRole } from '../types';
+import { Product, User, UserRole, Currency } from '../types';
 import { getStoredProducts, saveProducts } from '../store';
 
 interface ProductsProps {
   user: User | null;
   primaryColor: string;
   onAddToCart: (product: Product) => void;
+  currency: Currency;
 }
 
-const Products: React.FC<ProductsProps> = ({ user, primaryColor, onAddToCart }) => {
+const EXCHANGE_RATE = 83.5; // Fixed mock exchange rate 1 USD = 83.5 INR
+
+const Products: React.FC<ProductsProps> = ({ user, primaryColor, onAddToCart, currency }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filter, setFilter] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,6 +44,13 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor, onAddToCart }) 
     onAddToCart(product);
     setShowToast(`${product.name} added to cart!`);
     setTimeout(() => setShowToast(null), 3000);
+  };
+
+  const formatPrice = (usdPrice: number) => {
+    if (currency === Currency.INR) {
+      return `₹${(usdPrice * EXCHANGE_RATE).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+    return `$${usdPrice.toFixed(2)}`;
   };
 
   return (
@@ -109,7 +119,7 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor, onAddToCart }) 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-2xl text-sm font-black shadow-xl text-slate-900 border border-white/20">
-                ${product.price}
+                {formatPrice(product.price)}
               </div>
             </div>
             <div className="p-8">

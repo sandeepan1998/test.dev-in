@@ -12,8 +12,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
 import Cart from './pages/Cart';
-import { AuthState, UserRole, ThemeConfig, CartItem, Product } from './types';
-import { getStoredTheme, getStoredCart, saveCart } from './store';
+import { AuthState, UserRole, ThemeConfig, CartItem, Product, Currency } from './types';
+import { getStoredTheme, getStoredCart, saveCart, saveTheme } from './store';
 
 const App: React.FC = () => {
   const [auth, setAuth] = useState<AuthState>(() => {
@@ -62,6 +62,12 @@ const App: React.FC = () => {
     saveCart([]);
   };
 
+  const toggleCurrency = (newCurrency: Currency) => {
+    const updatedTheme = { ...theme, currency: newCurrency };
+    setTheme(updatedTheme);
+    saveTheme(updatedTheme);
+  };
+
   const appClasses = theme.isDarkMode 
     ? 'bg-slate-950 text-white selection:bg-blue-500/30' 
     : 'bg-white text-slate-900 selection:bg-blue-100';
@@ -75,13 +81,15 @@ const App: React.FC = () => {
           siteName={theme.siteName} 
           primaryColor={theme.primaryColor} 
           cartCount={cart.reduce((acc, item) => acc + item.quantity, 0)}
+          currency={theme.currency}
+          onCurrencyChange={toggleCurrency}
         />
         
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home primaryColor={theme.primaryColor} />} />
-            <Route path="/products" element={<Products user={auth.user} primaryColor={theme.primaryColor} onAddToCart={addToCart} />} />
-            <Route path="/cart" element={<Cart items={cart} onRemove={removeFromCart} onUpdate={updateQuantity} onClear={clearCart} primaryColor={theme.primaryColor} />} />
+            <Route path="/products" element={<Products user={auth.user} primaryColor={theme.primaryColor} onAddToCart={addToCart} currency={theme.currency} />} />
+            <Route path="/cart" element={<Cart items={cart} onRemove={removeFromCart} onUpdate={updateQuantity} onClear={clearCart} primaryColor={theme.primaryColor} currency={theme.currency} />} />
             <Route path="/login" element={<Login setAuth={setAuth} />} />
             <Route path="/register" element={<Register setAuth={setAuth} />} />
             <Route path="/contact" element={<Contact primaryColor={theme.primaryColor} />} />

@@ -123,7 +123,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, theme, setTheme, 
       zip.file("user_base.json", JSON.stringify(getStoredUsers(), null, 2));
       
       const content = await zip.generateAsync({ type: "blob" });
-      window.saveAs(content, `devbady_system_backup_${new Date().toISOString().split('T')[0]}.zip`);
+      window.saveAs(content, `clodecode_system_backup_${new Date().toISOString().split('T')[0]}.zip`);
       triggerStatus("Backup downloaded!");
     } catch (error) {
       alert("Failed to generate backup.");
@@ -406,7 +406,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, theme, setTheme, 
           <div className="relative z-10">
             <h2 className="text-4xl font-black mb-8">System Reliability</h2>
             <p className="text-slate-500 mb-12 max-w-2xl text-lg font-medium leading-relaxed">
-              Maintain the integrity of the <b>devbady.in</b> ecosystem. Use the tool below to generate an encrypted ZIP archive containing all marketplace resources, community data, and configuration blueprints.
+              Maintain the integrity of the <b>clodecode.in</b> ecosystem. Use the tool below to generate an encrypted ZIP archive containing all marketplace resources, community data, and configuration blueprints.
             </p>
             <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 inline-block">
                <button 

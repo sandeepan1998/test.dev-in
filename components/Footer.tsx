@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ const Footer: React.FC<{ siteName: string }> = ({ siteName }) => {
               {siteName}
             </h3>
             <p className="text-slate-400 max-w-sm leading-relaxed font-medium">
-              The premier coding base for developers who value performance, scalability, and clean architecture. Managed by <b>DevBady</b>.
+              The premier coding base for developers who value performance, scalability, and clean architecture. Managed by <b>ClodeCode</b>.
             </p>
           </div>
           <div>
@@ -30,7 +29,7 @@ const Footer: React.FC<{ siteName: string }> = ({ siteName }) => {
             <div className="flex flex-col space-y-4 text-slate-400 font-bold">
               <Link to="/login" className="hover:text-blue-400 transition-colors">Member Login</Link>
               <Link to="/register" className="hover:text-blue-400 transition-colors">Sign Up</Link>
-              <a href="https://github.com/devbady" target="_blank" rel="noreferrer" className="hover:text-blue-400 transition-colors">Open Source</a>
+              <a href="https://github.com/clodecode" target="_blank" rel="noreferrer" className="hover:text-blue-400 transition-colors">Open Source</a>
             </div>
           </div>
         </div>
@@ -40,7 +39,7 @@ const Footer: React.FC<{ siteName: string }> = ({ siteName }) => {
              <span className="hover:text-blue-400 transition-all cursor-pointer">GitHub Repository</span>
              <span className="hover:text-blue-400 transition-all cursor-pointer">Discord Community</span>
           </div>
-          <p>© {new Date().getFullYear()} {siteName}. Engineered for excellence by DevBady.</p>
+          <p>© {new Date().getFullYear()} {siteName}. Engineered for excellence by ClodeCode.</p>
         </div>
       </div>
     </footer>
