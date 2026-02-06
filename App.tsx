@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -11,55 +11,29 @@ import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
-import { User, UserRole, ThemeConfig, AuthState } from './types';
-import { getStoredTheme, getStoredProducts } from './store';
-
-// Fixed: Moved ProtectedRoute outside of the App component to ensure TypeScript correctly identifies the 'children' prop 
-// and to avoid unnecessary re-mounts on every App render.
-const ProtectedRoute: React.FC<{ 
-  children: React.ReactNode; 
-  isAuthenticated: boolean; 
-  userRole?: UserRole; 
-  role?: UserRole; 
-}> = ({ children, isAuthenticated, userRole, role }) => {
-  if (!isAuthenticated) return <Navigate to="/login" />;
-  if (role && userRole !== role) return <Navigate to="/dashboard" />;
-  return <>{children}</>;
-};
+import { AuthState, UserRole, ThemeConfig } from './types';
+import { getStoredTheme } from './store';
 
 const App: React.FC = () => {
-  const [auth, setAuth] = useState<AuthState>(() => {
-    const saved = localStorage.getItem('devbady_auth');
-    return saved ? JSON.parse(saved) : { user: null, isAuthenticated: false };
+  const [auth, setAuth] = useState<AuthState>({
+    user: null,
+    isAuthenticated: false,
   });
 
   const [theme, setTheme] = useState<ThemeConfig>(getStoredTheme());
-
-  useEffect(() => {
-    localStorage.setItem('devbady_auth', JSON.stringify(auth));
-  }, [auth]);
-
-  // Apply theme styles dynamically
-  useEffect(() => {
-    document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
-    if (theme.isDarkMode) {
-      document.body.classList.add('dark');
-      document.body.style.backgroundColor = '#0f172a';
-      document.body.style.color = '#f8fafc';
-    } else {
-      document.body.classList.remove('dark');
-      document.body.style.backgroundColor = '#f8fafc';
-      document.body.style.color = '#0f172a';
-    }
-  }, [theme]);
 
   const handleLogout = () => {
     setAuth({ user: null, isAuthenticated: false });
   };
 
+  // Sync theme changes to CSS variables if needed, or just pass as props
+  useEffect(() => {
+    document.title = theme.siteName;
+  }, [theme]);
+
   return (
-    <HashRouter>
-      <div className="flex flex-col min-h-screen">
+    <Router>
+      <div className={`min-h-screen flex flex-col ${theme.isDarkMode ? 'bg-slate-950 text-white' : 'bg-white text-slate-900'}`}>
         <Navbar 
           user={auth.user} 
           onLogout={handleLogout} 
@@ -76,34 +50,38 @@ const App: React.FC = () => {
             <Route path="/contact" element={<Contact primaryColor={theme.primaryColor} />} />
             <Route path="/privacy" element={<Privacy />} />
             
-            <Route path="/dashboard" element={
-              <ProtectedRoute isAuthenticated={auth.isAuthenticated} userRole={auth.user?.role}>
-                <Dashboard user={auth.user!} primaryColor={theme.primaryColor} />
-              </ProtectedRoute>
-            } />
+            <Route 
+              path="/dashboard" 
+              element={
+                auth.isAuthenticated ? (
+                  <Dashboard user={auth.user!} primaryColor={theme.primaryColor} />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              } 
+            />
             
-            <Route path="/admin" element={
-              <ProtectedRoute 
-                role={UserRole.ADMIN} 
-                isAuthenticated={auth.isAuthenticated} 
-                userRole={auth.user?.role}
-              >
-                <AdminDashboard 
-                  user={auth.user!} 
-                  theme={theme} 
-                  setTheme={setTheme} 
-                  primaryColor={theme.primaryColor} 
-                />
-              </ProtectedRoute>
-            } />
-
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route 
+              path="/admin" 
+              element={
+                auth.isAuthenticated && auth.user?.role === UserRole.ADMIN ? (
+                  <AdminDashboard 
+                    user={auth.user!} 
+                    theme={theme} 
+                    setTheme={setTheme} 
+                    primaryColor={theme.primaryColor} 
+                  />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              } 
+            />
           </Routes>
         </main>
 
         <Footer siteName={theme.siteName} />
       </div>
-    </HashRouter>
+    </Router>
   );
 };
 

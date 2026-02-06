@@ -1,10 +1,12 @@
 
+// Enum representing the available user roles in the application
 export enum UserRole {
+  ADMIN = 'ADMIN',
   USER = 'USER',
-  CLIENT = 'CLIENT',
-  ADMIN = 'ADMIN'
+  CLIENT = 'CLIENT'
 }
 
+// Interface for user objects
 export interface User {
   id: string;
   email: string;
@@ -13,6 +15,7 @@ export interface User {
   createdAt: string;
 }
 
+// Interface for marketplace products
 export interface Product {
   id: string;
   name: string;
@@ -22,14 +25,16 @@ export interface Product {
   image: string;
 }
 
+// Interface for global authentication state
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+}
+
+// Configuration for site-wide theme and branding
 export interface ThemeConfig {
   primaryColor: string;
   secondaryColor: string;
   isDarkMode: boolean;
   siteName: string;
-}
-
-export interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
 }

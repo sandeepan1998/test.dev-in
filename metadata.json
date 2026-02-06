@@ -1,8 +1,5 @@
 {
-  "name": "ClodeCode - Coding Hub",
-  "description": "Professional coding base platform for developers and clients at clodecode.in.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
+  "name": "clodecode.in",
+  "description": "Premium Coding Base and Enterprise Resource Platform.",
+  "requestFramePermissions": []
 }
