@@ -10,15 +10,21 @@ interface ProductsProps {
 const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filter, setFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     setProducts(getStoredProducts());
   }, []);
 
   const categories = ['All', ...new Set(products.map(p => p.category))];
-  const filteredProducts = filter === 'All' 
-    ? products 
-    : products.filter(p => p.category === filter);
+  
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = filter === 'All' || product.category === filter;
+    const matchesSearch = 
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const handleDelete = (id: string) => {
     if (user?.role !== UserRole.ADMIN) return;
@@ -30,26 +36,42 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
-        <div>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8">
+        <div className="max-w-md">
           <h1 className="text-4xl font-black mb-3 text-slate-900">Coding Base Marketplace</h1>
           <p className="text-slate-500 font-medium">Enterprise-grade resources for modern developers.</p>
         </div>
         
-        <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto scrollbar-hide">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-6 py-2.5 rounded-2xl text-sm font-bold transition-all whitespace-nowrap ${
-                filter === cat 
-                  ? 'bg-slate-900 text-white shadow-lg' 
-                  : 'bg-white text-slate-500 border border-slate-100 hover:border-blue-200'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-center">
+          {/* Search Bar */}
+          <div className="relative w-full sm:w-64">
+            <input 
+              type="text" 
+              placeholder="Search assets..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-5 py-3 pl-12 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium text-slate-700 shadow-sm"
+            />
+            <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-2 w-full sm:w-auto scrollbar-hide">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setFilter(cat)}
+                className={`px-6 py-2.5 rounded-2xl text-sm font-bold transition-all whitespace-nowrap ${
+                  filter === cat 
+                    ? 'bg-slate-900 text-white shadow-lg' 
+                    : 'bg-white text-slate-500 border border-slate-100 hover:border-blue-200 shadow-sm'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -99,9 +121,15 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
 
       {filteredProducts.length === 0 && (
         <div className="text-center py-32 bg-slate-50 rounded-[3rem] border-4 border-dashed border-slate-100">
-          <div className="text-6xl mb-6 opacity-30">📦</div>
-          <p className="text-slate-400 font-bold text-xl">Our coding base is currently expanding.</p>
-          <p className="text-slate-300">Check back soon for new enterprise templates.</p>
+          <div className="text-6xl mb-6 opacity-30">🔍</div>
+          <p className="text-slate-400 font-bold text-xl">No assets match your criteria.</p>
+          <p className="text-slate-300">Try adjusting your filters or search terms.</p>
+          <button 
+            onClick={() => {setFilter('All'); setSearchTerm('');}} 
+            className="mt-6 text-sm font-black text-blue-600 hover:underline"
+          >
+            Clear all filters
+          </button>
         </div>
       )}
     </div>

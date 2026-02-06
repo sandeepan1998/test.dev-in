@@ -105,7 +105,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, theme, setTheme, 
 
   const triggerStatus = (msg: string) => {
     setSaveStatus(msg);
-    setTimeout(() => setSaveStatus(null), 3000);
+    // Clear status after 4 seconds
+    setTimeout(() => setSaveStatus(null), 4000);
   };
 
   const handleExportToZip = async () => {
@@ -133,9 +134,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, theme, setTheme, 
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
+      {/* Dynamic Confirmation Message Notification */}
       {saveStatus && (
-        <div className="fixed bottom-10 right-10 bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl z-[100] animate-bounce font-bold border border-white/20">
-          <span className="mr-2">⚡</span> {saveStatus}
+        <div className="fixed bottom-10 right-10 flex items-center gap-3 bg-slate-900 text-white px-8 py-5 rounded-3xl shadow-2xl z-[100] animate-in fade-in slide-in-from-bottom-5 duration-300 font-bold border border-white/20">
+          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"/></svg>
+          </div>
+          {saveStatus}
         </div>
       )}
 
