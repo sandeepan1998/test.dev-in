@@ -2,15 +2,15 @@
 import { User, Product, ThemeConfig, UserRole } from './types';
 
 const KEYS = {
-  PRODUCTS: 'clodecode_products',
-  THEME: 'clodecode_theme',
-  USERS: 'clodecode_users'
+  PRODUCTS: 'devbady_products',
+  THEME: 'devbady_theme',
+  USERS: 'devbady_users'
 };
 
 const DEFAULT_PRODUCTS: Product[] = [
   {
     id: '1',
-    name: 'React Enterprise Starter',
+    name: 'React Enterprise Base',
     description: 'A robust boilerplate for large-scale React applications with pre-configured CI/CD.',
     price: 49.99,
     category: 'Templates',
@@ -18,11 +18,19 @@ const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     id: '2',
-    name: 'NodeJS Auth Shield',
+    name: 'Authentication Shield',
     description: 'Complete authentication middleware for Express with JWT, OAuth, and 2FA support.',
     price: 29.99,
     category: 'Plugins',
     image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400'
+  },
+  {
+    id: '3',
+    name: 'API Rapid Prototyper',
+    description: 'Instantly scaffold REST APIs with automated documentation and testing suites.',
+    price: 19.99,
+    category: 'Tools',
+    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400'
   }
 ];
 
@@ -30,32 +38,23 @@ const DEFAULT_THEME: ThemeConfig = {
   primaryColor: '#2563eb',
   secondaryColor: '#0f172a',
   isDarkMode: false,
-  siteName: 'clodecode.in'
+  siteName: 'devbady.in'
 };
 
-/**
- * Safely retrieves an item from localStorage without throwing errors.
- */
 const safeGetItem = (key: string): string | null => {
   try {
     return typeof window !== 'undefined' ? localStorage.getItem(key) : null;
   } catch (e) {
-    console.warn(`LocalStorage access blocked for key "${key}":`, e);
     return null;
   }
 };
 
-/**
- * Safely sets an item in localStorage without throwing errors.
- */
 const safeSetItem = (key: string, value: string) => {
   try {
     if (typeof window !== 'undefined') {
       localStorage.setItem(key, value);
     }
-  } catch (e) {
-    console.warn(`LocalStorage save blocked for key "${key}":`, e);
-  }
+  } catch (e) {}
 };
 
 export const getStoredUsers = (): User[] => {
