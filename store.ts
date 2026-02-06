@@ -1,9 +1,11 @@
-import { User, Product, ThemeConfig, UserRole } from './types';
+
+import { User, Product, ThemeConfig, UserRole, CartItem } from './types';
 
 const KEYS = {
   PRODUCTS: 'devbady_products_v2',
   THEME: 'devbady_theme_v2',
-  USERS: 'devbady_users_v2'
+  USERS: 'devbady_users_v2',
+  CART: 'devbady_cart_v2'
 };
 
 const DEFAULT_PRODUCTS: Product[] = [
@@ -92,6 +94,17 @@ export const getStoredTheme = (): ThemeConfig => {
   }
 };
 
+export const getStoredCart = (): CartItem[] => {
+  const data = safeGetItem(KEYS.CART);
+  if (!data) return [];
+  try {
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
 export const saveUser = (user: User) => {
   const users = getStoredUsers();
   users.push(user);
@@ -104,4 +117,8 @@ export const saveProducts = (products: Product[]) => {
 
 export const saveTheme = (theme: ThemeConfig) => {
   safeSetItem(KEYS.THEME, JSON.stringify(theme));
+};
+
+export const saveCart = (cart: CartItem[]) => {
+  safeSetItem(KEYS.CART, JSON.stringify(cart));
 };

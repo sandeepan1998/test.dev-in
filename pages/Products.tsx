@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Product, User, UserRole } from '../types';
 import { getStoredProducts, saveProducts } from '../store';
@@ -5,12 +6,14 @@ import { getStoredProducts, saveProducts } from '../store';
 interface ProductsProps {
   user: User | null;
   primaryColor: string;
+  onAddToCart: (product: Product) => void;
 }
 
-const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
+const Products: React.FC<ProductsProps> = ({ user, primaryColor, onAddToCart }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filter, setFilter] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showToast, setShowToast] = useState<string | null>(null);
 
   useEffect(() => {
     setProducts(getStoredProducts());
@@ -34,8 +37,20 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
     saveProducts(updated);
   };
 
+  const handleAddToCart = (product: Product) => {
+    onAddToCart(product);
+    setShowToast(`${product.name} added to cart!`);
+    setTimeout(() => setShowToast(null), 3000);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      {showToast && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl animate-bounce font-bold border border-white/20">
+          ✓ {showToast}
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8">
         <div className="max-w-md">
           <h1 className="text-4xl font-black mb-3 text-slate-900">Coding Base Marketplace</h1>
@@ -43,7 +58,6 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-center">
-          {/* Search Bar */}
           <div className="relative w-full sm:w-64">
             <input 
               type="text" 
@@ -109,10 +123,10 @@ const Products: React.FC<ProductsProps> = ({ user, primaryColor }) => {
               <button 
                 className="w-full py-4 rounded-2xl text-white font-black shadow-xl shadow-blue-500/20 transition-all hover:brightness-110 active:scale-95 flex items-center justify-center gap-2"
                 style={{ backgroundColor: primaryColor }}
-                onClick={() => alert(`Redirecting to checkout for ${product.name}...`)}
+                onClick={() => handleAddToCart(product)}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                License Resource
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                Add to Cart
               </button>
             </div>
           </div>

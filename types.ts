@@ -25,6 +25,11 @@ export interface Product {
   image: string;
 }
 
+// Interface for shopping cart items
+export interface CartItem extends Product {
+  quantity: number;
+}
+
 // Interface for global authentication state
 export interface AuthState {
   user: User | null;

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -10,16 +11,17 @@ import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
-import { AuthState, UserRole, ThemeConfig } from './types';
-import { getStoredTheme } from './store';
+import Cart from './pages/Cart';
+import { AuthState, UserRole, ThemeConfig, CartItem, Product } from './types';
+import { getStoredTheme, getStoredCart, saveCart } from './store';
 
 const App: React.FC = () => {
   const [auth, setAuth] = useState<AuthState>(() => {
-    // Basic session persistence for demo (not storage yet)
     return { user: null, isAuthenticated: false };
   });
 
   const [theme, setTheme] = useState<ThemeConfig>(getStoredTheme());
+  const [cart, setCart] = useState<CartItem[]>(getStoredCart());
 
   const handleLogout = () => {
     setAuth({ user: null, isAuthenticated: false });
@@ -30,6 +32,35 @@ const App: React.FC = () => {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'none';
   }, [theme]);
+
+  const addToCart = (product: Product) => {
+    const existing = cart.find(item => item.id === product.id);
+    let newCart;
+    if (existing) {
+      newCart = cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+    } else {
+      newCart = [...cart, { ...product, quantity: 1 }];
+    }
+    setCart(newCart);
+    saveCart(newCart);
+  };
+
+  const removeFromCart = (id: string) => {
+    const newCart = cart.filter(item => item.id !== id);
+    setCart(newCart);
+    saveCart(newCart);
+  };
+
+  const updateQuantity = (id: string, quantity: number) => {
+    const newCart = cart.map(item => item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item);
+    setCart(newCart);
+    saveCart(newCart);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    saveCart([]);
+  };
 
   const appClasses = theme.isDarkMode 
     ? 'bg-slate-950 text-white selection:bg-blue-500/30' 
@@ -43,12 +74,14 @@ const App: React.FC = () => {
           onLogout={handleLogout} 
           siteName={theme.siteName} 
           primaryColor={theme.primaryColor} 
+          cartCount={cart.reduce((acc, item) => acc + item.quantity, 0)}
         />
         
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home primaryColor={theme.primaryColor} />} />
-            <Route path="/products" element={<Products user={auth.user} primaryColor={theme.primaryColor} />} />
+            <Route path="/products" element={<Products user={auth.user} primaryColor={theme.primaryColor} onAddToCart={addToCart} />} />
+            <Route path="/cart" element={<Cart items={cart} onRemove={removeFromCart} onUpdate={updateQuantity} onClear={clearCart} primaryColor={theme.primaryColor} />} />
             <Route path="/login" element={<Login setAuth={setAuth} />} />
             <Route path="/register" element={<Register setAuth={setAuth} />} />
             <Route path="/contact" element={<Contact primaryColor={theme.primaryColor} />} />
