@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { GoogleGenAI } from "@google/genai";
@@ -23,7 +24,7 @@ const Home: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
         });
         setTrends(res.text || "");
       } catch (e) {
-        setTrends("Stay ahead with devbady.in enterprise patterns and scalable architecture.");
+        setTrends("Leading the next generation of enterprise performance coding.");
       } finally {
         setLoading(false);
       }
@@ -32,73 +33,92 @@ const Home: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-20">
-      <div className="grid lg:grid-cols-2 gap-12 items-center mb-32">
-        <div>
-          <h1 className="text-6xl font-black text-slate-900 leading-tight mb-6">
-            Architect Your <br/> <span style={{ color: primaryColor }}>Coding Base.</span>
+    <div className="bg-[#000000] text-white min-h-screen">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden pt-32 pb-48 border-b border-white/5">
+        <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 via-transparent to-transparent opacity-50"></div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+            SPEED IS <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">EVERYTHING.</span>
           </h1>
-          <p className="text-lg text-slate-600 mb-8 max-w-lg">
-            High-performance, production-ready coding foundations on <b>devbady.in</b> for elite engineering teams.
+          <p className="text-xl md:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto font-medium tracking-tight">
+            Build with devbady.in—the ultimate enterprise resource engine for elite performance.
           </p>
-          <div className="flex gap-4">
-            <Link to="/products" className="px-8 py-4 rounded-xl text-white font-black shadow-lg hover:brightness-110 transition-all" style={{ backgroundColor: primaryColor }}>Browse Marketplace</Link>
-            <Link to="/contact" className="px-8 py-4 rounded-xl border border-slate-200 font-bold hover:bg-slate-50 transition-all">Talk to Expert</Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/products" className="px-10 py-4 bg-white text-black font-black uppercase text-xs tracking-widest hover:bg-gray-200 transition-all">Explore Tech</Link>
+            <Link to="/contact" className="px-10 py-4 border border-white/20 text-white font-black uppercase text-xs tracking-widest hover:bg-white/5 transition-all">Contact Expert</Link>
           </div>
-        </div>
-        <div className="bg-slate-900 p-8 rounded-3xl shadow-2xl rotate-1 transform hover:rotate-0 transition-all">
-          <h3 className="text-blue-400 font-mono text-sm mb-4">// devbady.in AI Trends</h3>
-          {loading ? (
-            <div className="h-20 flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-100"></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200"></div>
-            </div>
-          ) : (
-            <p className="text-blue-100 font-mono text-sm leading-relaxed whitespace-pre-line">{trends}</p>
-          )}
         </div>
       </div>
 
-      <section className="mb-32">
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h2 className="text-4xl font-black text-slate-900 mb-2">Engineering Insights</h2>
-            <p className="text-slate-500">Latest thought leadership from the devbady core team.</p>
+      {/* AI Trends Sidebar Style */}
+      <div className="max-w-7xl mx-auto px-6 -mt-20 relative z-20">
+        <div className="bg-[#1a1a1a] border border-white/10 p-8 shadow-2xl flex flex-col md:flex-row gap-8 items-center">
+          <div className="flex-shrink-0">
+            <div className="text-[10px] font-black uppercase tracking-widest text-[#ed1c24] mb-2 flex items-center gap-2">
+              <span className="w-2 h-2 bg-[#ed1c24] animate-pulse"></span> Intelligence Hub
+            </div>
+            <h3 className="text-2xl font-black tracking-tighter">AI INSIGHTS</h3>
           </div>
-          <Link to="/contact" className="text-sm font-black uppercase tracking-widest text-blue-600 hover:underline">View All Posts</Link>
+          <div className="flex-grow border-l border-white/10 pl-8">
+            {loading ? (
+              <div className="flex gap-2">
+                <div className="w-1 h-1 bg-white animate-bounce"></div>
+                <div className="w-1 h-1 bg-white animate-bounce delay-100"></div>
+                <div className="w-1 h-1 bg-white animate-bounce delay-200"></div>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 font-medium leading-relaxed italic">{trends}</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Posts Section */}
+      <section className="max-w-7xl mx-auto px-6 py-32">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+          <div>
+            <div className="text-[11px] font-black uppercase tracking-widest text-[#ed1c24] mb-2">Technical Dispatch</div>
+            <h2 className="text-5xl font-black tracking-tighter">THE FUTURE OF COMPUTE</h2>
+          </div>
+          <Link to="/contact" className="text-xs font-black uppercase tracking-widest text-white border-b border-white/20 hover:border-white transition-all pb-1">All Resources</Link>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-1px bg-white/10 border border-white/10">
           {posts.map(post => (
-            <div key={post.id} className="group cursor-pointer">
-              <div className="h-48 rounded-3xl overflow-hidden mb-6 bg-slate-100">
-                <img src={post.coverImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800'} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" />
+            <div key={post.id} className="bg-[#000000] p-10 group cursor-pointer hover:bg-[#111111] transition-all">
+              <div className="h-40 overflow-hidden mb-8 grayscale hover:grayscale-0 transition-all duration-700">
+                <img src={post.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
               </div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-2 py-1 rounded">Dev Insight</span>
-                <span className="text-[10px] font-bold text-slate-400">{new Date(post.createdAt).toLocaleDateString()}</span>
+              <div className="flex items-center gap-4 mb-4">
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Resource</span>
+                <span className="text-[10px] font-bold text-gray-600">{new Date(post.createdAt).toLocaleDateString()}</span>
               </div>
-              <h3 className="text-xl font-black text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">{post.title}</h3>
-              <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed">{post.excerpt}</p>
+              <h3 className="text-xl font-black tracking-tight mb-4 group-hover:text-[#ed1c24] transition-colors">{post.title}</h3>
+              <p className="text-gray-500 text-sm font-medium leading-relaxed">{post.excerpt}</p>
+              <div className="mt-8 opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#ed1c24]">Read Article &rarr;</span>
+              </div>
             </div>
           ))}
-          {posts.length === 0 && <p className="col-span-full text-center py-20 text-slate-400 font-bold uppercase tracking-widest text-xs italic">Awaiting first dispatch...</p>}
         </div>
       </section>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {[
-          { title: 'Hardened Security', icon: '🛡️' },
-          { title: 'Global Scale', icon: '🌍' },
-          { title: 'Clean Architecture', icon: '🏛️' }
-        ].map((feat, i) => (
-          <div key={i} className="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition-all">
-            <div className="text-3xl mb-4">{feat.icon}</div>
-            <h4 className="text-xl font-bold mb-2">{feat.title}</h4>
-            <p className="text-slate-500 text-sm">Enterprise-grade patterns vetted by senior devbady architects.</p>
-          </div>
-        ))}
+      {/* Feature Blocks */}
+      <div className="bg-[#0f0f0f] border-t border-white/5 py-32">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+          {[
+            { title: 'GEN 5 STORAGE', icon: '💾', desc: 'Accelerated I/O paths for mission-critical data processing.' },
+            { title: 'HYPER-THREADED OPS', icon: '⚙️', desc: 'Parallel task execution models for high-concurrency apps.' },
+            { title: 'QUANTUM SECURITY', icon: '🛡️', desc: 'Encrypted shard architecture for zero-trust environments.' }
+          ].map((feat, i) => (
+            <div key={i} className="group">
+              <div className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 text-2xl mb-6 group-hover:bg-[#ed1c24] group-hover:text-white transition-all">{feat.icon}</div>
+              <h4 className="text-lg font-black tracking-widest mb-3 uppercase">{feat.title}</h4>
+              <p className="text-gray-500 text-sm font-medium leading-relaxed">{feat.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

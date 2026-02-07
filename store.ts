@@ -1,3 +1,4 @@
+
 import { User, Product, ThemeConfig, UserRole, CartItem, Currency, Post, PostStatus } from './types';
 
 const KEYS = {
@@ -11,37 +12,37 @@ const KEYS = {
 const DEFAULT_PRODUCTS: Product[] = [
   {
     id: '1',
-    name: 'React Enterprise Scaffold',
-    description: 'Highly scalable React architecture with TypeScript, Vitest, and Tailwind pre-configured.',
-    price: 59.00,
+    name: 'Ryzen Scaffold Engine',
+    description: 'Ultra-fast React architecture optimized for multi-threaded processing and enterprise scalability.',
+    price: 89.00,
     category: 'Templates',
-    image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=400'
+    image: 'https://images.unsplash.com/photo-1591405351990-4726e33df58d?auto=format&fit=crop&q=80&w=400'
   },
   {
     id: '2',
-    name: 'NodeJS API Shield',
-    description: 'Production-ready Express boilerplate with JWT auth, rate limiting, and Docker support.',
-    price: 35.00,
+    name: 'Radeon Backend Shield',
+    description: 'Visual-first API shield with high-throughput data pipelines and real-time monitoring.',
+    price: 45.00,
     category: 'Backend',
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=400'
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400'
   }
 ];
 
 const DEFAULT_POSTS: Post[] = [
   {
     id: '1',
-    title: 'The Future of Enterprise Coding in 2025',
-    excerpt: 'Discover why modular architecture is the backbone of modern software engineering.',
-    content: 'Enterprise coding is evolving. In 2025, the focus has shifted entirely towards resilient, modular systems...',
+    title: 'The Epoch of High-Performance Computing',
+    excerpt: 'How devbady architecture is redefining the boundaries of enterprise software delivery.',
+    content: 'At the intersection of performance and reliability, we find the new standard for enterprise coding...',
     status: PostStatus.PUBLISHED,
-    coverImage: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800',
+    coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800',
     createdAt: new Date().toISOString()
   }
 ];
 
 const DEFAULT_THEME: ThemeConfig = {
-  primaryColor: '#2563eb',
-  isDarkMode: false,
+  primaryColor: '#ed1c24', // AMD-inspired Red
+  isDarkMode: true,
   siteName: 'devbady.in',
   currency: Currency.USD
 };
