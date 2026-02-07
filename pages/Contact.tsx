@@ -27,8 +27,8 @@ const Contact: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
           <div className="space-y-8">
             <div>
               <h3 className="font-bold text-slate-400 uppercase text-xs tracking-widest mb-2">Emails</h3>
-              <p className="text-slate-900 font-bold">support@clodecode.in</p>
-              <p className="text-slate-900 font-bold">enterprise@clodecode.in</p>
+              <p className="text-slate-900 font-bold">support@devbady.in</p>
+              <p className="text-slate-900 font-bold">enterprise@devbady.in</p>
             </div>
             <div>
               <h3 className="font-bold text-slate-400 uppercase text-xs tracking-widest mb-2">Availability</h3>

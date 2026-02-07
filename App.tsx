@@ -11,6 +11,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
 import Cart from './pages/Cart';
+import FileShare from './pages/FileShare';
 import { AuthState, UserRole, ThemeConfig, CartItem, Product, Currency } from './types';
 import { getStoredTheme, getStoredCart, saveCart, saveTheme } from './store';
 
@@ -74,6 +75,11 @@ const App: React.FC = () => {
             <Route 
               path="/dashboard" 
               element={auth.isAuthenticated ? <Dashboard user={auth.user!} /> : <Navigate to="/login" />} 
+            />
+
+            <Route 
+              path="/file-share" 
+              element={auth.isAuthenticated ? <FileShare user={auth.user!} primaryColor={theme.primaryColor} /> : <Navigate to="/login" />} 
             />
             
             <Route 
