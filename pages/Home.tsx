@@ -1,20 +1,52 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { GoogleGenAI } from "@google/genai";
 import { Post, PostStatus } from '../types';
 import { getStoredPosts } from '../store';
+import { supabase } from '../supabase';
 
 const Home: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
   const [trends, setTrends] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const [loadingTrends, setLoadingTrends] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    setPosts(getStoredPosts().filter(p => p.status === PostStatus.PUBLISHED).slice(0, 3));
-    
+    const fetchPosts = async () => {
+      setLoadingPosts(true);
+      try {
+        const { data, error } = await supabase
+          .from('posts')
+          .select('*')
+          .eq('status', PostStatus.PUBLISHED)
+          .order('created_at', { ascending: false })
+          .limit(3);
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          setPosts(data.map(p => ({
+            id: p.id,
+            title: p.title,
+            excerpt: p.excerpt,
+            content: p.content,
+            status: p.status,
+            coverImage: p.cover_image,
+            createdAt: p.created_at
+          })));
+        } else {
+          setPosts(getStoredPosts().filter(p => p.status === PostStatus.PUBLISHED).slice(0, 3));
+        }
+      } catch (err) {
+        console.error('Error fetching posts:', err);
+        setPosts(getStoredPosts().filter(p => p.status === PostStatus.PUBLISHED).slice(0, 3));
+      } finally {
+        setLoadingPosts(false);
+      }
+    };
+
     const fetchTrends = async () => {
-      setLoading(true);
+      setLoadingTrends(true);
       try {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         const res = await ai.models.generateContent({
@@ -26,9 +58,11 @@ const Home: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
       } catch (e) {
         setTrends("Leading the next generation of enterprise performance coding.");
       } finally {
-        setLoading(false);
+        setLoadingTrends(false);
       }
     };
+
+    fetchPosts();
     fetchTrends();
   }, []);
 
@@ -38,7 +72,7 @@ const Home: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
       <div className="relative overflow-hidden pt-32 pb-48 border-b border-white/5">
         <div className="absolute inset-0 bg-gradient-to-br from-red-600/10 via-transparent to-transparent opacity-50"></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] mb-8 animate-in fade-in slide-in-from-bottom-10 duration-1000 uppercase italic">
             SPEED IS <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">EVERYTHING.</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto font-medium tracking-tight">
@@ -58,10 +92,10 @@ const Home: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
             <div className="text-[10px] font-black uppercase tracking-widest text-[#ed1c24] mb-2 flex items-center gap-2">
               <span className="w-2 h-2 bg-[#ed1c24] animate-pulse"></span> Intelligence Hub
             </div>
-            <h3 className="text-2xl font-black tracking-tighter">AI INSIGHTS</h3>
+            <h3 className="text-2xl font-black tracking-tighter uppercase">AI INSIGHTS</h3>
           </div>
           <div className="flex-grow border-l border-white/10 pl-8">
-            {loading ? (
+            {loadingTrends ? (
               <div className="flex gap-2">
                 <div className="w-1 h-1 bg-white animate-bounce"></div>
                 <div className="w-1 h-1 bg-white animate-bounce delay-100"></div>
@@ -79,29 +113,37 @@ const Home: React.FC<{ primaryColor: string }> = ({ primaryColor }) => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
           <div>
             <div className="text-[11px] font-black uppercase tracking-widest text-[#ed1c24] mb-2">Technical Dispatch</div>
-            <h2 className="text-5xl font-black tracking-tighter">THE FUTURE OF COMPUTE</h2>
+            <h2 className="text-5xl font-black tracking-tighter uppercase italic leading-none">THE FUTURE OF COMPUTE</h2>
           </div>
-          <Link to="/contact" className="text-xs font-black uppercase tracking-widest text-white border-b border-white/20 hover:border-white transition-all pb-1">All Resources</Link>
+          <Link to="/products" className="text-xs font-black uppercase tracking-widest text-white border-b border-white/20 hover:border-white transition-all pb-1">All Resources</Link>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-1px bg-white/10 border border-white/10">
-          {posts.map(post => (
-            <div key={post.id} className="bg-[#000000] p-10 group cursor-pointer hover:bg-[#111111] transition-all">
-              <div className="h-40 overflow-hidden mb-8 grayscale hover:grayscale-0 transition-all duration-700">
-                <img src={post.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        {loadingPosts ? (
+          <div className="grid md:grid-cols-3 gap-1px bg-white/10 border border-white/10">
+            {[1,2,3].map(n => (
+              <div key={n} className="bg-black p-10 h-64 animate-pulse"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-1px bg-white/10 border border-white/10">
+            {posts.map(post => (
+              <div key={post.id} className="bg-[#000000] p-10 group cursor-pointer hover:bg-[#111111] transition-all">
+                <div className="h-40 overflow-hidden mb-8 grayscale hover:grayscale-0 transition-all duration-700 relative">
+                  <img src={post.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={post.title} />
+                </div>
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Resource</span>
+                  <span className="text-[10px] font-bold text-gray-600">{new Date(post.createdAt).toLocaleDateString()}</span>
+                </div>
+                <h3 className="text-xl font-black tracking-tight mb-4 group-hover:text-[#ed1c24] transition-colors uppercase">{post.title}</h3>
+                <p className="text-gray-500 text-sm font-medium leading-relaxed line-clamp-2">{post.excerpt}</p>
+                <div className="mt-8 opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#ed1c24]">Read Article &rarr;</span>
+                </div>
               </div>
-              <div className="flex items-center gap-4 mb-4">
-                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Resource</span>
-                <span className="text-[10px] font-bold text-gray-600">{new Date(post.createdAt).toLocaleDateString()}</span>
-              </div>
-              <h3 className="text-xl font-black tracking-tight mb-4 group-hover:text-[#ed1c24] transition-colors">{post.title}</h3>
-              <p className="text-gray-500 text-sm font-medium leading-relaxed">{post.excerpt}</p>
-              <div className="mt-8 opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#ed1c24]">Read Article &rarr;</span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Feature Blocks */}
