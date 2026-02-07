@@ -38,7 +38,7 @@ const Footer: React.FC<{ siteName: string }> = ({ siteName }) => {
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-6 mt-20 pt-10 border-t border-white/5">
-        <p className="text-[10px] text-gray-600 font-bold tracking-widest uppercase">AMD and Ryzen are trademarks of Advanced Micro Devices, Inc. This UI is a thematic homage.</p>
+        <p className="text-[10px] text-gray-600 font-bold tracking-widest uppercase">all right received 2026.</p>
       </div>
     </footer>
   );

@@ -4,48 +4,72 @@ import { User } from '../types';
 
 const Dashboard: React.FC<{ user: User }> = ({ user }) => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-20">
-      <div className="bg-white p-12 rounded-[2.5rem] shadow-xl border border-slate-100">
-        <div className="flex flex-col md:flex-row items-center gap-6 mb-12">
-          <div className="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center text-3xl text-white font-black">
-            {user.name.charAt(0)}
+    <div className="bg-black min-h-screen text-white pt-32 pb-48">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-10 mb-20 border-b border-white/10 pb-12">
+          <div className="flex items-center gap-8">
+            <div className="w-24 h-24 bg-white text-black flex items-center justify-center text-4xl font-black">
+              {user.name.charAt(0)}
+            </div>
+            <div>
+              <div className="text-[11px] font-black uppercase tracking-widest text-[#ed1c24] mb-3">Provisioned Identity</div>
+              <h1 className="text-5xl font-black tracking-tighter uppercase leading-none">{user.name}</h1>
+              <p className="text-gray-500 font-bold uppercase text-[10px] tracking-widest mt-2">{user.email}</p>
+            </div>
           </div>
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl font-black text-slate-900">{user.name}</h1>
-            <p className="text-slate-500 font-medium">{user.email}</p>
+          <div className="flex gap-4">
+             <div className="bg-[#111111] border border-white/10 p-4 text-right">
+                <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Status</p>
+                <p className="text-xs font-bold text-emerald-500 uppercase">Authenticated</p>
+             </div>
+             <div className="bg-[#111111] border border-white/10 p-4 text-right">
+                <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Joined</p>
+                <p className="text-xs font-bold text-white uppercase">{new Date(user.createdAt).toLocaleDateString()}</p>
+             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <div className="bg-slate-50 p-6 rounded-2xl">
-            <h3 className="text-xs font-black uppercase text-slate-400 tracking-widest mb-2">Member Since</h3>
-            <p className="font-bold text-slate-800">{new Date(user.createdAt).toLocaleDateString()}</p>
-          </div>
-          <div className="bg-slate-50 p-6 rounded-2xl">
-            <h3 className="text-xs font-black uppercase text-slate-400 tracking-widest mb-2">Account Role</h3>
-            <p className="font-bold text-slate-800">{user.role}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-xl font-black mb-6">Your Purchased Assets</h2>
-            <div className="bg-slate-50 border-2 border-dashed border-slate-200 py-12 text-center rounded-3xl">
-               <p className="text-slate-400 font-bold mb-4">No active subscriptions found.</p>
-               <Link to="/products" className="text-blue-600 font-black text-sm uppercase hover:underline">Visit Marketplace</Link>
+        <div className="grid lg:grid-cols-3 gap-1px bg-white/10 border border-white/10">
+          <div className="lg:col-span-2 bg-black p-12">
+            <h2 className="text-3xl font-black tracking-tighter uppercase mb-10">Deployed Coding Bases</h2>
+            <div className="border border-dashed border-white/10 py-32 text-center">
+               <p className="text-gray-700 font-black uppercase text-xs tracking-[0.3em] mb-8 italic">No active deployments detected in local cache.</p>
+               <Link to="/products" className="px-10 py-4 bg-white text-black font-black uppercase text-[10px] tracking-widest hover:bg-[#ed1c24] hover:text-white transition-all">Explore Marketplace</Link>
             </div>
           </div>
           
-          <div>
-            <h2 className="text-xl font-black mb-6">Developer Utilities</h2>
-            <Link to="/file-share" className="group block bg-blue-600 p-8 rounded-3xl text-white hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
-              <div className="flex items-center justify-between mb-4">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
-                <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          <div className="bg-[#080808] p-12 space-y-12">
+            <div>
+              <h3 className="text-xl font-black tracking-tighter uppercase mb-8">System Utilities</h3>
+              <Link to="/file-share" className="group block bg-[#111111] border border-white/10 p-10 hover:border-[#ed1c24] transition-all relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 text-[#ed1c24]/20 group-hover:text-[#ed1c24] transition-colors">
+                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                </div>
+                <h4 className="text-lg font-black tracking-tighter uppercase mb-2">FILE SHARING</h4>
+                <p className="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-widest">High-throughput asset distribution node.</p>
+                <div className="mt-8 text-[9px] font-black text-[#ed1c24] uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all">
+                   Access Utility &rarr;
+                </div>
+              </Link>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-black tracking-tighter uppercase mb-8">Account Meta</h3>
+              <div className="space-y-4">
+                 <div className="flex justify-between items-center py-4 border-b border-white/5">
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Global Role</span>
+                    <span className="text-xs font-bold text-white uppercase">{user.role}</span>
+                 </div>
+                 <div className="flex justify-between items-center py-4 border-b border-white/5">
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Sync Quota</span>
+                    <span className="text-xs font-bold text-white uppercase">Unlimited</span>
+                 </div>
+                 <div className="flex justify-between items-center py-4">
+                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Node ID</span>
+                    <span className="text-[10px] font-mono text-gray-600 uppercase">{user.id}</span>
+                 </div>
               </div>
-              <h3 className="text-lg font-black mb-1">Secure File Share</h3>
-              <p className="text-blue-100 text-xs font-medium">Upload project files directly to devbady cloud.</p>
-            </Link>
+            </div>
           </div>
         </div>
       </div>
