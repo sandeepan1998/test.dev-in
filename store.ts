@@ -1,10 +1,11 @@
-import { User, Product, ThemeConfig, UserRole, CartItem, Currency } from './types';
+import { User, Product, ThemeConfig, UserRole, CartItem, Currency, Post, PostStatus } from './types';
 
 const KEYS = {
-  PRODUCTS: 'clodecode_products_v3',
-  THEME: 'clodecode_theme_v3',
-  USERS: 'clodecode_users_v3',
-  CART: 'clodecode_cart_v3'
+  PRODUCTS: 'devbady_products_v3',
+  THEME: 'devbady_theme_v3',
+  USERS: 'devbady_users_v3',
+  CART: 'devbady_cart_v3',
+  POSTS: 'devbady_posts_v3'
 };
 
 const DEFAULT_PRODUCTS: Product[] = [
@@ -26,10 +27,22 @@ const DEFAULT_PRODUCTS: Product[] = [
   }
 ];
 
+const DEFAULT_POSTS: Post[] = [
+  {
+    id: '1',
+    title: 'The Future of Enterprise Coding in 2025',
+    excerpt: 'Discover why modular architecture is the backbone of modern software engineering.',
+    content: 'Enterprise coding is evolving. In 2025, the focus has shifted entirely towards resilient, modular systems...',
+    status: PostStatus.PUBLISHED,
+    coverImage: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800',
+    createdAt: new Date().toISOString()
+  }
+];
+
 const DEFAULT_THEME: ThemeConfig = {
   primaryColor: '#2563eb',
   isDarkMode: false,
-  siteName: 'clodecode.in',
+  siteName: 'devbady.in',
   currency: Currency.USD
 };
 
@@ -40,6 +53,15 @@ export const getStoredProducts = (): Product[] => {
 
 export const saveProducts = (products: Product[]) => {
   localStorage.setItem(KEYS.PRODUCTS, JSON.stringify(products));
+};
+
+export const getStoredPosts = (): Post[] => {
+  const data = localStorage.getItem(KEYS.POSTS);
+  return data ? JSON.parse(data) : DEFAULT_POSTS;
+};
+
+export const savePosts = (posts: Post[]) => {
+  localStorage.setItem(KEYS.POSTS, JSON.stringify(posts));
 };
 
 export const getStoredTheme = (): ThemeConfig => {

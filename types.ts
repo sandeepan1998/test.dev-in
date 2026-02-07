@@ -8,6 +8,11 @@ export enum Currency {
   INR = 'INR'
 }
 
+export enum PostStatus {
+  PUBLISHED = 'PUBLISHED',
+  DRAFT = 'DRAFT'
+}
+
 export interface User {
   id: string;
   email: string;
@@ -23,6 +28,16 @@ export interface Product {
   price: number;
   category: string;
   image: string;
+}
+
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  status: PostStatus;
+  coverImage?: string;
+  createdAt: string;
 }
 
 export interface CartItem extends Product {

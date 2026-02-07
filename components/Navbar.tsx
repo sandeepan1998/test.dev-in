@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout, siteName, primaryColor,
 
           {!user && (
             <Link to="/register" className="hidden lg:block px-4 py-2 rounded-xl text-white font-bold text-xs uppercase tracking-widest transition-all hover:scale-105 active:scale-95" style={{ backgroundColor: primaryColor }}>
-              Join ClodeCode
+              Join devbady.in
             </Link>
           )}
 
@@ -39,8 +39,8 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout, siteName, primaryColor,
 
         <div className="flex items-center gap-4">
           <div className="flex bg-slate-100 p-1 rounded-lg text-[10px] font-black">
-            <button onClick={() => onCurrencyChange(Currency.USD)} className={`px-2 py-1 rounded ${currency === Currency.USD ? 'bg-white shadow-sm' : 'text-slate-400'}`}>USD</button>
-            <button onClick={() => onCurrencyChange(Currency.INR)} className={`px-2 py-1 rounded ${currency === Currency.INR ? 'bg-white shadow-sm' : 'text-slate-400'}`}>INR</button>
+            <button onClick={() => onCurrencyChange(Currency.USD)} className={`px-2 py-1 rounded ${currency === Currency.USD ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>USD</button>
+            <button onClick={() => onCurrencyChange(Currency.INR)} className={`px-2 py-1 rounded ${currency === Currency.INR ? 'bg-white shadow-sm text-slate-900' : 'text-slate-400'}`}>INR</button>
           </div>
 
           <Link to="/cart" className="relative p-2 text-slate-500 hover:text-blue-600">
