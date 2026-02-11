@@ -33,6 +33,12 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout, siteName, primaryColor,
               Home
             </Link>
             <Link 
+              to="/ai-studio" 
+              className={`text-[11px] font-black uppercase tracking-widest transition-all ${location.pathname === '/ai-studio' ? 'text-white border-b-2 border-white pb-1' : 'text-gray-500 hover:text-white'}`}
+            >
+              AI Studio
+            </Link>
+            <Link 
               to="/products" 
               className={`text-[11px] font-black uppercase tracking-widest transition-all ${location.pathname === '/products' ? 'text-white border-b-2 border-white pb-1' : 'text-gray-500 hover:text-white'}`}
             >

@@ -12,6 +12,7 @@ import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
 import Cart from './pages/Cart';
 import FileShare from './pages/FileShare';
+import AIStudio from './pages/AIStudio';
 import { AuthState, UserRole, ThemeConfig, CartItem, Product, Currency, User } from './types';
 import { getStoredTheme, getStoredCart, saveCart, saveTheme } from './store';
 import { supabase } from './supabase';
@@ -116,6 +117,11 @@ const App: React.FC = () => {
             <Route 
               path="/dashboard" 
               element={auth.isAuthenticated ? <Dashboard user={auth.user!} /> : <Navigate to="/login" />} 
+            />
+
+            <Route 
+              path="/ai-studio" 
+              element={auth.isAuthenticated ? <AIStudio user={auth.user!} primaryColor={theme.primaryColor} /> : <Navigate to="/login" />} 
             />
 
             <Route 

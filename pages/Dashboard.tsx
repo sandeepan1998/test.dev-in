@@ -41,16 +41,29 @@ const Dashboard: React.FC<{ user: User }> = ({ user }) => {
           <div className="bg-[#080808] p-12 space-y-12">
             <div>
               <h3 className="text-xl font-black tracking-tighter uppercase mb-8">System Utilities</h3>
-              <Link to="/file-share" className="group block bg-[#111111] border border-white/10 p-10 hover:border-[#ed1c24] transition-all relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 text-[#ed1c24]/20 group-hover:text-[#ed1c24] transition-colors">
-                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
-                </div>
-                <h4 className="text-lg font-black tracking-tighter uppercase mb-2">FILE SHARING</h4>
-                <p className="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-widest">High-throughput asset distribution node.</p>
-                <div className="mt-8 text-[9px] font-black text-[#ed1c24] uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all">
-                   Access Utility &rarr;
-                </div>
-              </Link>
+              <div className="grid gap-4">
+                <Link to="/ai-studio" className="group block bg-[#111111] border border-white/10 p-10 hover:border-[#ed1c24] transition-all relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 text-[#ed1c24]/20 group-hover:text-[#ed1c24] transition-colors">
+                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  </div>
+                  <h4 className="text-lg font-black tracking-tighter uppercase mb-2">AI STUDIO</h4>
+                  <p className="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-widest">Neural resource generation agent.</p>
+                  <div className="mt-8 text-[9px] font-black text-[#ed1c24] uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all">
+                     Access Studio &rarr;
+                  </div>
+                </Link>
+
+                <Link to="/file-share" className="group block bg-[#111111] border border-white/10 p-10 hover:border-[#ed1c24] transition-all relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 text-[#ed1c24]/20 group-hover:text-[#ed1c24] transition-colors">
+                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                  </div>
+                  <h4 className="text-lg font-black tracking-tighter uppercase mb-2">FILE SHARING</h4>
+                  <p className="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-widest">High-throughput asset distribution node.</p>
+                  <div className="mt-8 text-[9px] font-black text-[#ed1c24] uppercase tracking-widest opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 transition-all">
+                     Access Utility &rarr;
+                  </div>
+                </Link>
+              </div>
             </div>
 
             <div>
