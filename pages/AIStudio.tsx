@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { GoogleGenAI } from "@google/genai";
 import { User } from '../types';
 
@@ -7,10 +8,14 @@ interface Message {
   content: string;
 }
 
-const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primaryColor }) => {
+const GUEST_LIMIT_MS = 10 * 60 * 1000; // 10 minutes
+
+const AIStudio: React.FC<{ user: User | null, primaryColor: string }> = ({ user, primaryColor }) => {
   const [prompt, setPrompt] = useState('');
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [showExpiredModal, setShowExpiredModal] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const examplePrompts = [
@@ -18,6 +23,35 @@ const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primar
     'Write a Python function to calculate Fibonacci sequence',
     'Explain the concept of microservices'
   ];
+
+  // Guest Timer Logic
+  useEffect(() => {
+    if (!user) {
+      const startTimeStr = sessionStorage.getItem('devbady_ai_guest_start');
+      let startTime = startTimeStr ? parseInt(startTimeStr) : Date.now();
+      
+      if (!startTimeStr) {
+        sessionStorage.setItem('devbady_ai_guest_start', startTime.toString());
+      }
+
+      const checkTime = () => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, GUEST_LIMIT_MS - elapsed);
+        setTimeRemaining(Math.ceil(remaining / 1000));
+        
+        if (remaining <= 0) {
+          setShowExpiredModal(true);
+        }
+      };
+
+      checkTime();
+      const interval = setInterval(checkTime, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setTimeRemaining(null);
+      setShowExpiredModal(false);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -27,6 +61,8 @@ const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primar
 
   const handleSendMessage = async (e?: React.FormEvent, overridePrompt?: string) => {
     if (e) e.preventDefault();
+    if (showExpiredModal) return;
+
     const activePrompt = overridePrompt || prompt;
     if (!activePrompt.trim() || loading) return;
 
@@ -58,8 +94,40 @@ const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primar
     }
   };
 
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div className="bg-[#000000] min-h-screen text-white pt-24 pb-32 selection:bg-[#ed1c24] selection:text-white">
+    <div className="bg-[#000000] min-h-screen text-white pt-24 pb-32 selection:bg-[#ed1c24] selection:text-white relative">
+      
+      {/* EXPIRED MODAL */}
+      {showExpiredModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 backdrop-blur-md bg-black/80 animate-in fade-in duration-500">
+          <div className="max-w-md w-full bg-[#0a0a0a] border border-white/10 p-12 shadow-2xl relative text-center">
+             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#ed1c24]"></div>
+             <div className="w-20 h-20 bg-[#ed1c24]/10 text-[#ed1c24] rounded-full flex items-center justify-center mx-auto mb-8 border border-[#ed1c24]/20 animate-pulse">
+                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+             </div>
+             <h2 className="text-3xl font-black tracking-tighter mb-4 uppercase italic">NEURAL LINK EXPIRED</h2>
+             <p className="text-gray-500 text-sm font-medium mb-10 leading-relaxed">
+               Guest session threshold (10:00) reached. To continue utilizing the <span className="text-white font-bold italic">devbady Intelligence Engine</span>, please authorize your identity node.
+             </p>
+             <Link 
+               to="/login" 
+               className="block w-full py-5 bg-white text-black font-black uppercase text-xs tracking-widest hover:bg-[#ed1c24] hover:text-white transition-all shadow-xl active:scale-95 italic"
+             >
+               Access System Terminal
+             </Link>
+             <Link to="/" className="block mt-6 text-[10px] font-black uppercase tracking-widest text-gray-700 hover:text-white transition-colors">
+               Return to Core
+             </Link>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-6 h-[calc(100vh-180px)] flex flex-col">
         
         {/* Header */}
@@ -71,8 +139,19 @@ const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primar
             <h1 className="text-5xl font-black tracking-tighter uppercase italic">AI STUDIO</h1>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-black text-gray-600 uppercase mb-1">Provisioned To</p>
-            <p className="text-sm font-bold text-white uppercase tracking-tighter">NODE_{user.name.toUpperCase()}</p>
+            {user ? (
+              <>
+                <p className="text-[10px] font-black text-gray-600 uppercase mb-1">Provisioned To</p>
+                <p className="text-sm font-bold text-white uppercase tracking-tighter">NODE_{user.name.toUpperCase()}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-[10px] font-black text-gray-600 uppercase mb-1">Guest Session Remaining</p>
+                <p className={`text-xl font-black tabular-nums tracking-tighter ${timeRemaining !== null && timeRemaining < 60 ? 'text-[#ed1c24] animate-pulse' : 'text-white'}`}>
+                  {timeRemaining !== null ? formatTime(timeRemaining) : '--:--'}
+                </p>
+              </>
+            )}
           </div>
         </div>
 
@@ -126,8 +205,8 @@ const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primar
           <form onSubmit={handleSendMessage} className="relative group">
             <textarea 
               rows={3}
-              placeholder="Inject technical prompt or architecture query..."
-              className="w-full bg-[#0a0a0a] border border-white/10 p-6 pr-40 outline-none focus:border-[#ed1c24] transition-all font-medium text-lg placeholder:text-gray-700 resize-none rounded-sm"
+              placeholder={showExpiredModal ? "NEURAL LINK EXPIRED. PLEASE AUTHENTICATE." : "Inject technical prompt or architecture query..."}
+              className={`w-full bg-[#0a0a0a] border border-white/10 p-6 pr-40 outline-none focus:border-[#ed1c24] transition-all font-medium text-lg placeholder:text-gray-700 resize-none rounded-sm ${showExpiredModal ? 'opacity-20 cursor-not-allowed' : ''}`}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={(e) => {
@@ -136,11 +215,11 @@ const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primar
                   handleSendMessage();
                 }
               }}
-              disabled={loading}
+              disabled={loading || showExpiredModal}
             />
             <button 
               type="submit"
-              disabled={loading || !prompt.trim()}
+              disabled={loading || !prompt.trim() || showExpiredModal}
               className="absolute right-4 bottom-4 px-10 py-4 bg-white text-black font-black uppercase text-xs tracking-widest hover:bg-[#ed1c24] hover:text-white transition-all disabled:opacity-30 disabled:hover:bg-white disabled:hover:text-black italic"
             >
               {loading ? 'SYNCING...' : 'EXECUTE'}
@@ -148,19 +227,21 @@ const AIStudio: React.FC<{ user: User, primaryColor: string }> = ({ user, primar
           </form>
 
           {/* Example Prompts */}
-          <div className="mt-4 flex flex-wrap gap-2">
-             <span className="text-[9px] font-black uppercase tracking-widest text-gray-600 mr-2 self-center">Quick Shards:</span>
-             {examplePrompts.map((ex, i) => (
-               <button 
-                key={i}
-                onClick={() => handleSendMessage(undefined, ex)}
-                className="px-4 py-2 border border-white/10 bg-white/5 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:border-[#ed1c24] hover:bg-[#ed1c24]/5 transition-all"
-                disabled={loading}
-               >
-                 {ex}
-               </button>
-             ))}
-          </div>
+          {!showExpiredModal && (
+            <div className="mt-4 flex flex-wrap gap-2">
+               <span className="text-[9px] font-black uppercase tracking-widest text-gray-600 mr-2 self-center">Quick Shards:</span>
+               {examplePrompts.map((ex, i) => (
+                 <button 
+                  key={i}
+                  onClick={() => handleSendMessage(undefined, ex)}
+                  className="px-4 py-2 border border-white/10 bg-white/5 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white hover:border-[#ed1c24] hover:bg-[#ed1c24]/5 transition-all"
+                  disabled={loading}
+                 >
+                   {ex}
+                 </button>
+               ))}
+            </div>
+          )}
         </div>
       </div>
 

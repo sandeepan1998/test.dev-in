@@ -121,7 +121,7 @@ const App: React.FC = () => {
 
             <Route 
               path="/ai-studio" 
-              element={auth.isAuthenticated ? <AIStudio user={auth.user!} primaryColor={theme.primaryColor} /> : <Navigate to="/login" />} 
+              element={<AIStudio user={auth.user} primaryColor={theme.primaryColor} />} 
             />
 
             <Route 
