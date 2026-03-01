@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { User } from '../types';
+import { MyFiles } from '../components/MyFiles';
+import { MyNotes } from '../components/MyNotes';
+import { TeamMembers } from '../components/TeamMembers';
 
 const Dashboard: React.FC<{ user: User }> = ({ user }) => {
   return (
@@ -9,7 +12,7 @@ const Dashboard: React.FC<{ user: User }> = ({ user }) => {
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-10 mb-20 border-b border-white/10 pb-12">
           <div className="flex items-center gap-8">
             <div className="w-24 h-24 bg-white text-black flex items-center justify-center text-4xl font-black">
-              {user.name.charAt(0)}
+              {user.name.charAt(0).toUpperCase()}
             </div>
             <div>
               <div className="text-[11px] font-black uppercase tracking-widest text-[#ed1c24] mb-3">Provisioned Identity</div>
@@ -85,6 +88,10 @@ const Dashboard: React.FC<{ user: User }> = ({ user }) => {
             </div>
           </div>
         </div>
+
+        <MyFiles user={user} />
+        <MyNotes user={user} />
+        <TeamMembers user={user} />
       </div>
     </div>
   );
