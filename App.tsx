@@ -15,7 +15,8 @@ import FileShare from './pages/FileShare';
 import AIStudio from './pages/AIStudio';
 import { AuthState, UserRole, ThemeConfig, CartItem, Product, Currency, User } from './types';
 import { getStoredTheme, getStoredCart, saveCart, saveTheme } from './store';
-import { supabase } from './supabase';
+import { auth as firebaseAuth } from './firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const App: React.FC = () => {
   const [auth, setAuth] = useState<AuthState>({ user: null, isAuthenticated: false });
@@ -23,33 +24,17 @@ const App: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>(getStoredCart());
 
   useEffect(() => {
-    // Check active sessions and sets the user
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+      if (user && user.emailVerified) {
+        const userRole = user.email === 'info.devbady@gmail.com' ? UserRole.ADMIN : UserRole.USER;
         setAuth({
           isAuthenticated: true,
           user: {
-            id: session.user.id,
-            email: session.user.email!,
-            name: session.user.user_metadata.full_name || session.user.email!.split('@')[0],
-            role: session.user.user_metadata.role || UserRole.USER,
-            createdAt: session.user.created_at
-          }
-        });
-      }
-    });
-
-    // Listen for changes on auth state
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setAuth({
-          isAuthenticated: true,
-          user: {
-            id: session.user.id,
-            email: session.user.email!,
-            name: session.user.user_metadata.full_name || session.user.email!.split('@')[0],
-            role: session.user.user_metadata.role || UserRole.USER,
-            createdAt: session.user.created_at
+            id: user.uid,
+            email: user.email!,
+            name: user.displayName || user.email!.split('@')[0],
+            role: userRole,
+            createdAt: user.metadata.creationTime || new Date().toISOString()
           }
         });
       } else {
@@ -57,11 +42,12 @@ const App: React.FC = () => {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => unsubscribe();
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut(firebaseAuth);
+    window.location.hash = '#/login';
   };
 
   const addToCart = (product: Product) => {
