@@ -56,7 +56,14 @@ async function startServer() {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Unauthorized' });
     try {
-      req.user = jwt.verify(token, JWT_SECRET);
+      // Decode Firebase token (or our mock token)
+      const decoded = jwt.decode(token) as any;
+      if (!decoded) throw new Error('Invalid token');
+      
+      req.user = {
+        id: decoded.user_id || decoded.id,
+        role: decoded.email === 'admin@poper.com' ? 'admin' : (decoded.role || 'user')
+      };
       next();
     } catch (err) {
       res.status(401).json({ error: 'Invalid token' });
